@@ -3,7 +3,7 @@
 # Usage: ./watch-deploy.sh
 # Requires: fswatch (brew install fswatch)
 
-WATCH_DIR="/Users/vx/Desktop/20250618 商机成单SOP"
+WATCH_DIR="/Users/vx/Desktop/Claude+ds/20250618 商机成单SOP"
 DEBOUNCE_SEC=3
 last_run=0
 

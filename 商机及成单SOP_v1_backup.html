@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>澳洲租房 · 订单转化 SOP</title>
+<style>
+  :root {
+    --bg: #fbfaf7; --card: #ffffff; --text: #1c1917; --text-muted: #57534e; --text-soft: #78716c;
+    --border: #e8e4df; --border-strong: #d6d0c6; --accent: #b45309; --accent-soft: #fff8f1;
+    --accent-border: #f5d6b0; --gold: #a47e1b; --gold-bg: #fffdf5; --gold-border: #f5e6b8;
+    --teal: #0d6b6b; --teal-bg: #f2faf9; --teal-border: #b8e0dd; --warn: #c2410c;
+    --warn-bg: #fff7ed; --warn-border: #fdd8c0; --green: #2d6b36; --green-bg: #f2faf0;
+    --green-border: #c0e8c8; --blue: #1e5a8b; --blue-bg: #f0f6fb; --blue-border: #c0d8ec;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,.04); --shadow-md: 0 4px 12px rgba(0,0,0,.06);
+    --radius-sm: 6px; --radius: 10px; --radius-lg: 16px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.7; -webkit-font-smoothing: antialiased;
+  }
+  nav { position: fixed; left: 0; top: 0; bottom: 0; width: 240px; background: var(--card); border-right: 1px solid var(--border); padding: 28px 18px; overflow-y: auto; z-index: 100; }
+  nav .nav-logo { font-size: 13px; font-weight: 700; letter-spacing: .03em; color: var(--accent); margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+  nav .nav-section { font-size: 10px; font-weight: 600; letter-spacing: .08em; color: var(--text-soft); margin: 16px 0 5px; padding-left: 4px; }
+  nav a { display: block; padding: 5px 10px; border-radius: var(--radius-sm); font-size: 13px; color: var(--text-muted); text-decoration: none; transition: all .2s; border-left: 2px solid transparent; margin-bottom: 1px; }
+  nav a:hover { color: var(--accent); background: var(--accent-soft); }
+  @media (max-width: 1024px) { nav { display: none; } main { margin-left: 0 !important; } }
+  main { margin-left: 240px; max-width: 900px; padding: 48px 56px 120px; }
+  @media (max-width: 768px) { main { padding: 32px 20px 80px; } }
+  h1 { font-size: 34px; font-weight: 800; letter-spacing: .02em; line-height: 1.25; margin-bottom: 6px; }
+  h1 span { color: var(--accent); }
+  .subtitle { font-size: 15px; color: var(--text-soft); margin-bottom: 32px; }
+  h2 { font-size: 21px; font-weight: 700; margin: 44px 0 18px; padding-bottom: 10px; border-bottom: 2px solid var(--border); display: flex; align-items: center; gap: 10px; }
+  h2 .num { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 8px; background: var(--accent); color: #fff; font-size: 15px; font-weight: 700; flex-shrink: 0; }
+  h3 { font-size: 17px; font-weight: 700; margin: 28px 0 12px; color: var(--text); }
+  h4 { font-size: 15px; font-weight: 600; margin: 18px 0 8px; color: var(--text-muted); }
+  h5 { font-size: 14px; font-weight: 600; margin: 14px 0 6px; color: var(--accent); }
+
+  .diagnosis-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+  @media (max-width: 600px) { .diagnosis-grid { grid-template-columns: 1fr; } }
+  .diag-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow-sm); }
+  .diag-card.bad { border-left: 4px solid var(--warn); }
+  .diag-card.good { border-left: 4px solid var(--green); }
+  .diag-card h4 { margin: 0 0 6px; font-size: 14px; }
+  .diag-card p { font-size: 13px; color: var(--text-muted); }
+
+  .formula-box { background: var(--gold-bg); border: 1px solid var(--gold-border); border-radius: var(--radius-lg); padding: 20px 28px; margin: 20px 0; text-align: center; }
+  .formula-box .formula { font-size: 20px; font-weight: 800; letter-spacing: .04em; color: var(--gold); }
+  .formula-box .formula em { font-style: normal; color: var(--accent); font-size: 26px; }
+
+  .process-flow { display: flex; gap: 20px; margin: 24px 0 36px; flex-wrap: wrap; }
+  .process-step { flex: 1; min-width: 150px; background: var(--card); border: 2px solid var(--border); border-radius: var(--radius); padding: 20px 16px; text-align: center; position: relative; transition: box-shadow .25s; display: flex; flex-direction: column; justify-content: center; }
+  .process-step:hover { box-shadow: var(--shadow-md); border-color: var(--accent-border); }
+  .process-step::after { content: "→"; position: absolute; right: -24px; top: 50%; transform: translateY(-50%); font-size: 22px; font-weight: 700; color: var(--accent); z-index: 2; }
+  .process-step:last-child::after { display: none; }
+  .process-step .step-label { font-size: 11px; font-weight: 700; letter-spacing: .06em; color: var(--accent); margin-bottom: 6px; text-transform: uppercase; }
+  .process-step .step-title { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.3; }
+  @media (max-width: 768px) {
+    .process-flow { flex-direction: column; gap: 12px; }
+    .process-step::after { content: "↓"; right: 50%; top: auto; bottom: -20px; transform: translateX(50%); }
+    .process-step:last-child::after { display: none; }
+  }
+
+  .mindmap-wrap { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px 20px 20px; margin: 32px 0 40px; box-shadow: var(--shadow-sm); overflow-x: auto; }
+  .mindmap-wrap .mm-title { text-align: center; font-size: 13px; font-weight: 700; letter-spacing: .06em; color: var(--text-soft); margin-bottom: 16px; }
+  .mindmap { display: grid; grid-template-columns: auto 24px 140px 24px 1fr; grid-template-rows: auto auto auto; gap: 0; min-width: 820px; align-items: center; }
+  .mm-root-cell { grid-row: 1/4; grid-column: 1; display: flex; align-items: center; justify-content: center; padding-right: 8px; }
+  .mm-root-node { background: var(--accent); color: #fff; font-size: 14px; font-weight: 800; padding: 16px 22px; border-radius: var(--radius); box-shadow: 0 2px 10px rgba(180,83,9,.3); white-space: nowrap; text-align: center; line-height: 1.5; }
+  .mm-conn-a { grid-column: 2; position: relative; height: 100%; min-height: 20px; }
+  .mm-conn-b { grid-column: 4; position: relative; height: 100%; min-height: 20px; }
+  .mm-conn-a::after, .mm-conn-b::after { content: ""; position: absolute; top: 50%; left: 0; right: 0; height: 1.5px; background: var(--border-strong); }
+  .mm-conn-a::before, .mm-conn-b::before { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 1.5px; background: var(--border-strong); }
+  .mm-branch-cell { grid-column: 3; display: flex; align-items: center; justify-content: center; }
+  .mm-branch { color: #fff; font-weight: 700; font-size: 13px; padding: 9px 14px; border-radius: var(--radius-sm); box-shadow: var(--shadow-sm); text-align: center; white-space: nowrap; width: 100%; }
+  .mm-branch.s1 { background: #c2410c; } .mm-branch.s2 { background: #b45309; } .mm-branch.s3 { background: #a47e1b; }
+  .mm-leaf-cell { grid-column: 5; display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 0 8px 8px; align-items: center; }
+  .mm-leaf { background: var(--bg); border: 1px solid var(--border); font-size: 12px; font-weight: 500; color: var(--text-muted); padding: 5px 10px; border-radius: var(--radius-sm); white-space: nowrap; }
+  .mm-leaf.l1 { border-left: 3px solid #c2410c; } .mm-leaf.l2 { border-left: 3px solid #b45309; } .mm-leaf.l3 { border-left: 3px solid #a47e1b; }
+  .mm-key { display: inline-block; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 10px; margin-left: 4px; vertical-align: middle; }
+  .mm-key.hot { background: #fef2f2; color: #b91c1c; } .mm-key.pct { background: #fff8f1; color: #b45309; }
+
+  .highlight { background: var(--accent-soft); border: 1px solid var(--accent-border); border-radius: var(--radius); padding: 14px 18px; margin: 14px 0; display: flex; gap: 10px; align-items: flex-start; font-size: 14px; }
+  .highlight::before { content: "💡"; flex-shrink: 0; font-size: 16px; line-height: 1.4; }
+  .highlight strong { color: var(--accent); }
+  .warn { background: var(--warn-bg); border: 1px solid var(--warn-border); border-radius: var(--radius); padding: 14px 18px; margin: 14px 0; display: flex; gap: 10px; align-items: flex-start; font-size: 14px; }
+  .warn::before { content: "⚠"; flex-shrink: 0; font-size: 16px; line-height: 1.4; }
+  .warn strong { color: var(--warn); }
+  .green-box { background: var(--green-bg); border: 1px solid var(--green-border); border-radius: var(--radius); padding: 14px 18px; margin: 14px 0; display: flex; gap: 10px; align-items: flex-start; font-size: 14px; }
+  .green-box::before { content: "✅"; flex-shrink: 0; font-size: 16px; line-height: 1.4; }
+  .green-box strong { color: var(--green); }
+  .blue-box { background: var(--blue-bg); border: 1px solid var(--blue-border); border-radius: var(--radius); padding: 14px 18px; margin: 14px 0; font-size: 14px; }
+  .blue-box strong { color: var(--blue); }
+
+  .technique-list { list-style: none; padding: 0; }
+  .technique-list li { padding: 12px 16px; border-left: 3px solid var(--border); margin-bottom: 5px; background: var(--card); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 14px; transition: border-color .2s, box-shadow .2s; }
+  .technique-list li:hover { border-left-color: var(--accent); box-shadow: var(--shadow-sm); }
+  .technique-list li strong { color: var(--accent); }
+  .technique-list li .li-num { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font-size: 12px; font-weight: 700; margin-right: 8px; flex-shrink: 0; }
+  .technique-list li .tag-new { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 10px; font-weight: 700; background: #fef2f2; color: #b91c1c; margin-left: 6px; vertical-align: middle; }
+
+  .script-block { background: var(--teal-bg); border: 1px solid var(--teal-border); border-radius: var(--radius); padding: 18px 22px; margin: 14px 0; font-size: 14px; line-height: 1.8; }
+  .script-block .script-label { font-size: 11px; font-weight: 700; letter-spacing: .06em; color: var(--teal); margin-bottom: 6px; }
+  .script-block q { display: block; color: var(--teal); font-style: italic; padding: 3px 0; }
+
+  .wild-script { background: #fefaf5; border: 1px dashed #e0c090; border-radius: var(--radius); padding: 18px 22px; margin: 14px 0; font-size: 14px; line-height: 1.8; }
+  .wild-script .script-label { font-size: 11px; font-weight: 700; letter-spacing: .06em; color: #b45309; margin-bottom: 6px; }
+  .wild-script q { display: block; color: #8b5a2b; padding: 3px 0; font-style: italic; }
+  .wild-script q::before { content: "🔥 "; }
+
+  .tips-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0; }
+  @media (max-width: 600px) { .tips-grid { grid-template-columns: 1fr; } }
+  .tip-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow-sm); }
+  .tip-card h4 { margin-top: 0; font-size: 14px; }
+  .tip-card p { font-size: 13px; color: var(--text-muted); }
+
+  .info-table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 16px 0; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); }
+  .info-table th { background: var(--accent-soft); color: var(--accent); font-weight: 700; font-size: 13px; padding: 10px 14px; text-align: left; border-bottom: 2px solid var(--accent-border); }
+  .info-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); background: var(--card); }
+  .info-table tr:last-child td { border-bottom: none; }
+  .info-table .highlight-row td { background: var(--gold-bg); font-weight: 600; }
+
+  .step-flow { display: flex; flex-direction: column; gap: 0; margin: 16px 0; }
+  .step-item { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px dashed var(--border); align-items: flex-start; }
+  .step-item:last-child { border-bottom: none; }
+  .step-marker { flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; color: #fff; }
+  .step-marker.ice { background: #c2410c; }
+  .step-marker.dig { background: #b45309; }
+  .step-marker.push { background: #a47e1b; }
+  .step-marker.pay { background: #0d6b6b; }
+  .step-body { flex: 1; }
+  .step-body .step-title { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+  .step-body .step-desc { font-size: 13px; color: var(--text-muted); }
+
+  .tag-easy { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 12px; font-weight: 600; background: #f2faf0; color: #2d6b36; }
+  .tag-hard { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 12px; font-weight: 600; background: #fef2f2; color: #b91c1c; }
+
+  .divider { border: none; height: 1px; background: linear-gradient(to right, transparent, var(--border-strong), transparent); margin: 40px 0; }
+  footer { margin-top: 80px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-soft); text-align: center; }
+
+  /* ─── TABS ─── */
+  .tab-bar { display: flex; gap: 0; margin-bottom: 32px; border-bottom: 2px solid var(--border); }
+  .tab-btn { flex: 1; max-width: 240px; padding: 14px 24px; border: none; background: none; font-size: 15px; font-weight: 700; color: var(--text-soft); cursor: pointer; transition: all .2s; font-family: inherit; position: relative; text-align: center; }
+  .tab-btn:hover { color: var(--accent); background: var(--accent-soft); }
+  .tab-btn.active { color: var(--accent); }
+  .tab-btn.active::after { content: ""; position: absolute; bottom: -2px; left: 0; right: 0; height: 3px; background: var(--accent); border-radius: 2px 2px 0 0; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  .tab-panel h1 { margin-top: 0; }
+
+  /* ─── SCRIPT CARDS (for ambassador tab) ─── */
+  .script-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin: 16px 0; box-shadow: var(--shadow-sm); }
+  .script-card .sc-scenario { font-size: 12px; font-weight: 700; letter-spacing: .04em; color: var(--accent); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+  .script-card .sc-scenario .sc-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 10px; font-weight: 700; }
+  .sc-badge.mass { background: #f0e6f6; color: #6b21a8; }
+  .sc-badge.pre-book { background: #fef4e8; color: #c2410c; }
+  .sc-badge.post-book { background: #f2faf0; color: #2d6b36; }
+  .sc-badge.familiar { background: #edf3f5; color: #3d6b73; }
+  .sc-badge.reconnect { background: #fef2f2; color: #b91c1c; }
+  .sc-badge.checkin { background: #fff8f1; color: #a47e1b; }
+  .script-card .sc-text { font-size: 14px; line-height: 1.8; color: var(--text); white-space: pre-line; background: var(--bg); border-radius: var(--radius-sm); padding: 16px 20px; margin-top: 10px; }
+
+  @media print { nav { display: none; } main { margin-left: 0; max-width: 100%; padding: 20px; } .tip-card, .process-step, .diag-card { break-inside: avoid; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">📋 订单转化 SOP</div>
+  <div class="nav-section">总览</div>
+  <a href="#problem">问题诊断</a>
+  <a href="#mindmap">思维导图</a>
+  <a href="#flow">四阶段流程</a>
+  <div class="nav-section">① 商机→高意向</div>
+  <a href="#s1-open">详细沟通步骤</a>
+  <a href="#s1-dig">探需求方法论</a>
+  <a href="#s1-recommend">精准推荐</a>
+  <a href="#s1-followup">商机回访策略</a>
+  <a href="#s1-noreply">不回复应对</a>
+  <div class="nav-section">② 高意向→订单</div>
+  <a href="#s2-decision">下单决策树</a>
+  <a href="#s2-tactics">Push 申请策略</a>
+  <a href="#s2-giveup">放弃判断标准</a>
+  <div class="nav-section">③ 订单→成单</div>
+  <a href="#s3-timeline">付款全流程时间轴</a>
+  <a href="#s3-objection">付款障碍应对</a>
+  <a href="#s3-viewing">邀约看房</a>
+  <div class="nav-section">④ 后期服务</div>
+  <a href="#s4-ambassador">校园大使转化</a>
+  <a href="#s4-post">客诉+维护</a>
+  <div class="nav-section">专题</div>
+  <a href="#wild-ref">实战技法速查表</a>
+  <a href="#risk">风控与竞品</a>
+</nav>
+
+<main>
+
+<h1>澳洲租房 · 销售工具箱</h1>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('sop')">📋 订单转化 SOP</button>
+  <button class="tab-btn" onclick="switchTab('ambassador')">🎓 校园大使话术库</button>
+</div>
+
+<!-- ═══════ TAB 1: SOP ═══════ -->
+<div class="tab-panel active" id="tab-sop">
+
+<!-- ═══════ PROBLEM ═══════ -->
+<section id="problem">
+<h2><span class="num">!</span>核心问题与解决思路</h2>
+<div class="diagnosis-grid">
+  <div class="diag-card bad"><h4>🔴 当前问题</h4><p>订单转成单周期<strong>平均 5 天</strong>，远高于同行 2-3 天。一线顾问逼单技巧因人而异，缺乏统一标准化流程。部分顾问（尤其新人）缺乏判断客户意向和主动逼单的意识。</p></div>
+  <div class="diag-card good"><h4>🟢 解决思路</h4><p>将销冠和资深顾问的<strong>"实战技法"技巧标准化</strong>，形成可抄作业的话术和动作指南。从商机转订单阶段就开始铺垫心理预期。<strong>不违反公司规则，话术尽可能"野"，以结果为导向。</strong></p></div>
+</div>
+<div class="highlight"><div><strong>关键洞察：</strong>真正的转化效率取决于在引导客户下单时铺垫了什么样的心理预期——用"抢房"而非"申请"，用"锁优惠"而非"下单"。</div></div>
+</section>
+
+<!-- ═══════ MIND MAP ═══════ -->
+<section id="mindmap">
+<div class="mindmap-wrap">
+  <div class="mm-title">🧠 订单转化全流程 · 思维导图</div>
+  <div class="mindmap">
+    <div class="mm-root-cell"><div class="mm-root-node">订单转化<br>全流程</div></div>
+    <div class="mm-conn-a"></div><div class="mm-branch-cell"><div class="mm-branch s1">①商机→高意向</div></div><div class="mm-conn-b"></div>
+    <div class="mm-leaf-cell"><span class="mm-leaf l1">分渠道破冰</span><span class="mm-leaf l1">低成本互动</span><span class="mm-leaf l1">故意说错</span><span class="mm-leaf l1">推-挖-推循环</span><span class="mm-leaf l1">留白推荐</span><span class="mm-leaf l1">5轮不回复应对</span></div>
+    <div class="mm-conn-a"></div><div class="mm-branch-cell"><div class="mm-branch s2">②高意向→订单</div></div><div class="mm-conn-b"></div>
+    <div class="mm-leaf-cell"><span class="mm-leaf l2">抢房氛围</span><span class="mm-leaf l2">零风险占坑</span><span class="mm-leaf l2">优惠倒计时</span><span class="mm-leaf l2">公寓截图施压</span></div>
+    <div class="mm-conn-a"></div><div class="mm-branch-cell"><div class="mm-branch s3">③订单→成单</div></div><div class="mm-conn-b"></div>
+    <div class="mm-leaf-cell"><span class="mm-leaf l3">一条龙逼单 <span class="mm-key hot">核心</span></span><span class="mm-leaf l3">连环招×5</span><span class="mm-leaf l3">④校园大使转化</span></div>
+  </div>
+</div>
+</section>
+
+<section id="flow">
+<div class="process-flow">
+  <div class="process-step"><div class="step-label">阶段一</div><div class="step-title">商机 → 高意向</div></div>
+  <div class="process-step"><div class="step-label">阶段二</div><div class="step-title">高意向 → 订单</div></div>
+  <div class="process-step"><div class="step-label">阶段三</div><div class="step-title">订单 → 成单</div></div>
+  <div class="process-step"><div class="step-label">阶段四</div><div class="step-title">后期服务</div></div>
+</div>
+</section>
+
+<hr class="divider">
+
+<!-- ═══════════════════════ 阶段一 ═══════════════════════ -->
+<h2 id="s1-open"><span class="num">1</span>阶段一：商机 → 高意向</h2>
+
+<div class="green-box"><div><strong>🔰 高意向判断标准（新人必读）：</strong>只要学生没有明确说"不行""太贵了不考虑"，<strong>默认就是高意向</strong>。尤其对于 Accolade / Scape 等学生公寓——他只要没排斥，就是你的单。下了单就默认他要定，不付钱就是有问题，针对性解决即可。</div></div>
+
+<!-- ─── 1.1 详细沟通步骤 ─── -->
+<h3>🔑 一、开始沟通 —— 详细步骤（分渠道）</h3>
+<p style="font-size:14px;color:var(--text-muted);margin-bottom:12px;">不同渠道进来的客户，开场方式不同。核心原则：<strong>先让对方有回复，再逐步挖需求。不追求一步到位。</strong></p>
+
+<div class="highlight"><div><strong>沟通渠道优先级：</strong>能发语音 → 发语音；能打电话 → 打电话。文字聊天的信息密度和情感传递远不如语音。语音能更快建立信任、更快拿到真实需求。</div></div>
+
+<h5>📋 渠道客户（微信群/BD分配）—— 标准四步</h5>
+<div class="step-flow">
+  <div class="step-item">
+    <div class="step-marker ice">1</div>
+    <div class="step-body"><div class="step-title">进群第一分钟：发送开头语</div><div class="step-desc">"同学你好，我是一乡好居的XX，主要负责悉尼/墨尔本区域的房源对接。咱们这边有什么需求随时沟通~"<br>目的：让对方知道你是谁、你能做什么。话术要点：简洁、不啰嗦。</div></div>
+  </div>
+  <div class="step-item">
+    <div class="step-marker ice">2</div>
+    <div class="step-body"><div class="step-title">确认基本信息（低成本问题）</div><div class="step-desc">依次确认：<strong>① 学校/校区 ② 计划入住时间 ③ 性别 ④ 签证状态</strong><br>注意：一次只问1-2个，不要连珠炮。学生回复一个再问下一个。<br>示例："同学你是哪个学校的呀？"→ 等他回 → "计划什么时候入住呢？"</div></div>
+  </div>
+  <div class="step-item">
+    <div class="step-marker ice">3</div>
+    <div class="step-body"><div class="step-title">制造"咨询火爆"的第一印象</div><div class="step-desc">在对话中自然植入："刚才有好几个同学也在问这个区域的房子"、"最近7月入住的同学特别多"<br>目的：让学生感受到房源紧俏，为后续逼单埋伏笔。同时暗示"你不是我唯一的客户，我有的是客户"——提升你在对话中的心理地位。</div></div>
+  </div>
+  <div class="step-item">
+    <div class="step-marker ice">4</div>
+    <div class="step-body"><div class="step-title">开始第一轮推荐</div><div class="step-desc">拿到基本需求后不要等，立刻推荐第一套房源。用"第一眼原则"选房（详见推荐章节）。<br>如果学生不回复 → 立即调整：换更简单的问题，或换房源特征重新吸引。</div></div>
+  </div>
+</div>
+
+<h5>📱 小红书 / APP 客户 —— 差异化开场</h5>
+<div class="step-flow">
+  <div class="step-item">
+    <div class="step-marker ice">1</div>
+    <div class="step-body"><div class="step-title">假装搞混帖子来源</div><div class="step-desc">"同学你好，你是刚才问XX studio的那位同学吗？"（故意说错帖子内容）<br>→ 学生纠正："不是，我看的是2B2B"<br>→ 你："哦不好意思搞混了，今天问这个公寓的同学特别多"<br>效果：① 获取真实需求 ② 暗示房源火爆 ③ 自然打开对话</div></div>
+  </div>
+  <div class="step-item">
+    <div class="step-marker ice">2</div>
+    <div class="step-body"><div class="step-title">反向回小红书确认</div><div class="step-desc">"刚才在小红书加我问studio那个是你吗？" → 学生说不是 → "那可能搞错了，不过既然加了，你有啥需求也可以问我"<br>效果：降低学生的防备心理，同时暗示你客户很多。</div></div>
+  </div>
+  <div class="step-item">
+    <div class="step-marker ice">3</div>
+    <div class="step-body"><div class="step-title">用语音建立信任</div><div class="step-desc">小红书客户和APP客户通常戒备心较强、比价意识重。文字聊几句后，<strong>尽早切语音</strong>。语音能传递专业感和可信度，比文字更容易建立信任关系。</div></div>
+  </div>
+</div>
+
+<h5>👨‍👩‍👧 家长客户 —— 信任优先</h5>
+<div class="step-flow">
+  <div class="step-item">
+    <div class="step-marker ice">1</div>
+    <div class="step-body"><div class="step-title">先展示专业度，不要急着推房源</div><div class="step-desc">家长和学生的决策逻辑不同——<strong>学生看颜值和距离，家长看安全和合规</strong>。开场先介绍公司背景、合作公寓品牌、服务流程，建立"正规机构"的认知。</div></div>
+  </div>
+  <div class="step-item">
+    <div class="step-marker ice">2</div>
+    <div class="step-body"><div class="step-title">主动要求拉群或电话沟通</div><div class="step-desc">"阿姨/叔叔，方便的话我直接给您打个电话，或者拉个群把孩子也拉进来，我一起给你们介绍，有什么问题随时问我。"<br>家长更信任语音沟通，且拉群后孩子在群里也能看到信息，减少信息传递损耗。</div></div>
+  </div>
+  <div class="step-item">
+    <div class="step-marker ice">3</div>
+    <div class="step-body"><div class="step-title">安全感和保障是核心卖点</div><div class="step-desc">对家长推房源时，优先强调：<strong>① 公寓品牌和资质 ② 24小时安保/门禁 ③ 退订政策保障 ④ 中国学生比例和评价</strong>。价格反而不是家长最关心的——他们更担心孩子住得不安全。</div></div>
+  </div>
+</div>
+
+<div class="wild-script">
+  <div class="script-label">🦊 破冰实战技法补充</div>
+  <q>故意说错信息诱导纠正："你是悉尼大学的吧？"→ "不是，我是新南的"→ 获取真实信息，同时自然打开对话</q>
+  <q>明知故问："咱是7月份入住是吧？"（群名已标注7月→再次确认，让他回复）</q>
+  <q>非渠道客户（小红书/APP）：假装搞混——"你是刚才问XX房源的同学吗？"暗示该房源咨询火爆，同时探出他真实感兴趣的内容</q>
+</div>
+
+<!-- ─── 1.2 探需求 ─── -->
+<h3 id="s1-dig">🔎 二、探需求 —— 详细方法论</h3>
+<p style="font-size:14px;color:var(--text-muted);margin-bottom:12px;">学生往往不知道自己要什么，但一定知道<strong>不要什么</strong>。探需求不是一次性问完，而是<strong>推-挖-推循环</strong>：推一套 → 看反馈 → 挖出偏好 → 再推更精准的。</p>
+
+<h5>🔄 推-挖-推 循环法</h5>
+<div class="step-flow">
+  <div class="step-item">
+    <div class="step-marker dig">推</div>
+    <div class="step-body"><div class="step-title">发一套特征突出的房源</div><div class="step-desc">只发最核心卖点（如"走路5分钟到学校"），不要发全套资料。用留白式推荐激发学生提问。</div></div>
+  </div>
+  <div class="step-item">
+    <div class="step-marker dig">看</div>
+    <div class="step-body"><div class="step-title">观察学生反馈</div><div class="step-desc"><strong>他问什么 = 他看重什么。</strong>问价格 → 预算敏感；问距离 → 通勤优先；问房间大小 → 居住体验优先；只回"好的" → 不感兴趣，换方向。</div></div>
+  </div>
+  <div class="step-item">
+    <div class="step-marker dig">挖</div>
+    <div class="step-body"><div class="step-title">顺着他的问题深挖</div><div class="step-desc">学生问"离学校多远？"→ 你反问"你希望走路多久以内？10分钟还是20分钟？"<br>学生问"多少钱？"→ 你反问"你的预算大概在什么范围？"<br>用封闭式问题引导学生说出具体需求。</div></div>
+  </div>
+  <div class="step-item">
+    <div class="step-marker dig">推</div>
+    <div class="step-body"><div class="step-title">根据反馈精准再推</div><div class="step-desc">循环回到第一步。每轮推荐都比上一轮更接近学生的真实需求。一般 2-3 轮循环即可锁定需求。</div></div>
+  </div>
+</div>
+
+<h5>🔬 关键信号识别（学生说了什么 = 他在想什么）</h5>
+<table class="info-table">
+  <thead><tr><th>学生说什么</th><th>真实含义</th><th>你的应对</th></tr></thead>
+  <tbody>
+    <tr><td>"你们是先交定金还是先签合同？"</td><td><strong>正在其他平台对比</strong>，别人让他交定金了</td><td>立刻追问："你在别的地方也在看吗？那边什么条件？"了解竞品情况，针对性对比</td></tr>
+    <tr><td>"这个我再看看"</td><td>有顾虑但没说出口</td><td>直接问："是价格不合适还是位置不合适？"用封闭式问题引导他说出真实顾虑</td></tr>
+    <tr><td>"我爸妈要看看"</td><td>决策权不完全在他手里，或他在用家长当借口拖延</td><td>"方便的话拉个群，我直接跟叔叔阿姨介绍，他们有什么问题我直接解答"</td></tr>
+    <tr><td>"这个还不错"</td><td><strong>高意向信号！</strong>有兴趣但不急</td><td>立刻跟进："要不要先下单锁一下？随时可以取消的"</td></tr>
+    <tr><td>"太贵了"</td><td>可能是真的超预算，也可能是在试探底线</td><td>"你的预算大概多少？我帮你找找有没有合适的"——先确认是真超预算还是假超预算</td></tr>
+    <tr><td>只回表情包或"好的"</td><td>不感兴趣或没时间看</td><td>不要追问，换个特征完全不同的房源再推一次</td></tr>
+  </tbody>
+</table>
+
+<div class="highlight"><div><strong>核心原则：对学生产生好奇心。</strong>他说每句话你都要想"他为什么这么说？"。不要学生说什么你执行什么——学生说的需求 <strong>信一半就行</strong>，需求是可以被引导和改变的。最重要的是通过他反馈的线索，<strong>锁定他真正在意的点</strong>。</div></div>
+
+<!-- ─── 1.3 精准推荐 ─── -->
+<h3 id="s1-recommend">🏠 三、精准推荐与挖掘需求</h3>
+
+<ul class="technique-list">
+  <li><span class="li-num">1</span><strong>推荐顺序（必须遵守）：</strong>独家房源、必住榜房源 → 佣金高、好卖的房源。该顺序直接关联奖金收益。</li>
+  <li><span class="li-num">2</span><strong>"第一眼原则"：</strong>第一套房源宁可超出预算，也要选视觉冲击力强、卖点突出的房子，抓住学生眼球。<span class="tag-new">实战技法</span></li>
+  <li><span class="li-num">3</span><strong>留白式推荐：</strong>不要一次性把所有信息（地图、视频、价格）都发完。只发最关键的一个卖点，吸引学生主动提问。<strong>他问什么 = 他看重什么。</strong><span class="tag-new">实战技法</span></li>
+  <li><span class="li-num">4</span><strong>不做无效推荐：</strong>学生对这套有兴趣，就决不推第二套。推多了他反而选择困难。</li>
+</ul>
+
+<div class="formula-box">
+  <div class="formula" style="font-size:17px;">📋 推荐房源<em>三要素</em>（必发）</div>
+  <div style="display:flex;gap:16px;margin-top:12px;text-align:left;flex-wrap:wrap;justify-content:center;">
+    <span style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:14px;">① 实拍图片 / 视频</span>
+    <span style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:14px;">② 地图周边配套</span>
+    <span style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:14px;">③ 人话卖点 ≤ 20字</span>
+  </div>
+  <div class="formula-desc" style="margin-top:10px;">不要一次性把所有信息都发完。只发最强卖点吸引学生提问。拒绝 AI 长文案和 emoji 堆砌，用人话短句。</div>
+</div>
+
+<h3 id="s1-followup">🔄 四、商机回访策略</h3>
+<p style="font-size:14px;color:var(--text-muted);margin-bottom:12px;">商机回访是激活存量、提升效率的必备动作。前期已有沟通基础的客户，回访成交成本更低、概率更高。<strong>三类回访方式可组合使用：</strong></p>
+<ul class="technique-list">
+  <li><span class="li-num">1</span><strong>聊天框置顶：</strong>把待回访客户置顶，从下往上 = 回访时间倒序。最久没联系的排在最上面，优先跟进。</li>
+  <li><span class="li-num">2</span><strong>专属标签分类：</strong>给客户打标签（时间维度：7月入住/9月入住；需求维度：Studio/2B；学校维度：USYD/UNSW），方便批量筛选精准回访。</li>
+  <li><span class="li-num">3</span><strong>导表批量跟进：</strong>日常统一安排导表，个性化需求主动向上级申请。注意：<strong>导表后不要直接在微信搜名字</strong>——群昵称和真实姓名不一致会导致搜不到。正确做法：一个窗口开商机表，一个窗口开CRM商机列表，对照查找精准锁定。</li>
+  <li><span class="li-num">4</span><strong>回访时务必 @客户：</strong>日常消息繁杂，不@大概率被忽略。尤其4-6月、7-9月非紧急需求期，不@几乎无法触达。</li>
+</ul>
+
+<h3>🔍 五、查房技巧</h3>
+<ul class="technique-list">
+  <li><span class="li-num">1</span><strong>群内搜地址：</strong>直接搜房源地址查看历史信息（地址必须<strong>完全一致</strong>）</li>
+  <li><span class="li-num">2</span><strong>拼房群提问：</strong>你不知道的信息大概率有人知道。同样适用申请流程、政策等</li>
+</ul>
+
+<h3>📮 六、公寓反馈技巧</h3>
+<ul class="technique-list"><li>向公寓反馈问题时，<strong>带上学生名字 + 邮箱</strong>，公寓才能快速定位</li></ul>
+
+<h3 id="s1-noreply">📵 七、沟通不回复 / 敷衍的应对方法</h3>
+<p style="font-size:14px;color:var(--text-muted);margin-bottom:12px;">大概率推荐未满足需求。从某一特征突出的房源入手，逐步锁定痛点：</p>
+<table class="info-table">
+  <thead><tr><th>次序</th><th>策略</th><th>参考话术</th></tr></thead>
+  <tbody>
+    <tr><td><strong>第1次</strong></td><td>正常推荐</td><td>—</td></tr>
+    <tr><td><strong>第2次</strong></td><td>发<strong>价格极低</strong>房源</td><td>"目前新南有一套价格特别优惠的房源，发给你参考下~"</td></tr>
+    <tr><td><strong>第3次</strong></td><td>发<strong>位置极近</strong>房源</td><td>—</td></tr>
+    <tr><td><strong>第4次</strong></td><td>发<strong>装修精致、颜值高</strong>房源</td><td>—</td></tr>
+    <tr><td><strong>第5次</strong></td><td>发<strong>租期灵活</strong>房源</td><td>—</td></tr>
+    <tr class="highlight-row"><td><strong>均无效</strong></td><td colspan="2">大概率无实际找房需求 → 降低回访频率，定期跟进</td></tr>
+  </tbody>
+</table>
+
+<hr class="divider">
+
+<!-- ═══════════════════════ 阶段二 ═══════════════════════ -->
+<h2><span class="num">2</span>阶段二：高意向 → 订单</h2>
+
+<div class="formula-box"><div class="formula">客户小程序下单 → 成单概率已达 <em>70%</em></div></div>
+
+<!-- ─── 2.1 决策树 ─── -->
+<h3 id="s2-decision">🧭 一、下单思路决策树</h3>
+<p style="font-size:14px;color:var(--text-muted);margin-bottom:12px;">看到学生的不同信号，用不同的逼单角度。不是所有学生都吃同一套。</p>
+
+<table class="info-table">
+  <thead><tr><th>学生信号</th><th>用哪种逼单角度</th><th>核心话术方向</th></tr></thead>
+  <tbody>
+    <tr><td>对房源表示喜欢，但说"再看看"</td><td><strong>稀缺性 + 零风险</strong></td><td>"这间房只剩最后几间了，要不先下单锁一下？随时可以取消的，没有任何费用"</td></tr>
+    <tr><td>在几个房源之间犹豫</td><td><strong>给建议 + 锁优惠</strong></td><td>"我建议你先选XX，因为…（给理由）。今天的返现活动最后一天，先下单把优惠锁住"</td></tr>
+    <tr><td>担心价格/预算</td><td><strong>优惠 + 零风险 + 对比</strong></td><td>"这个价格在这一片已经是最低的了。你先下单占个位置，后边有更合适的随时换"</td></tr>
+    <tr><td>嫌远/嫌户型不好</td><td><strong>先确认是真嫌弃还是假借口</strong></td><td>反问："如果距离近一些/户型好一些，你会考虑吗？" → 如果说是 → 换房源。如果说"再说吧" → 他根本没意向，降低跟进优先级</td></tr>
+    <tr><td>自称"不着急"</td><td><strong>租期匹配 + 抢房</strong></td><td>"适合你开课时间的房源本来就少，现在不定后边可能没了"</td></tr>
+    <tr><td>问很具体的问题（合同/定金/流程）</td><td><strong>默认成交 + 封闭提问</strong></td><td>他在对比平台，是强意向信号。直接推下单："信息我发你了，咱们先把单子下了，后边的细节我帮你跟进"</td></tr>
+  </tbody>
+</table>
+
+<div class="green-box"><div><strong>下单思路总结：</strong>根据不同信号选不同角度——① 房源稀缺 ② 优惠即将截止 ③ 租期匹配稀缺 ④ 零风险无损失。关键是<strong>不要等他做决定，你替他做决定</strong>——"我建议你先锁这个，因为…"</div></div>
+
+<div class="warn" id="s2-giveup">
+  <div><strong>⏰ 什么时候该放弃这条商机？</strong>不是所有商机都值得无限跟进。满足以下 <strong>3 个条件中的 2 个</strong>，降低优先级，转为定期回访而非主动逼单：<br>
+  ① 连续 3 次推荐不同特征房源，学生均无实质反馈（只回"好的""看看"算无反馈）<br>
+  ② 学生明确说"暂时不找了""签证还没下""学校还没定"——需求时间窗口不在当前<br>
+  ③ 付款阶段用了 3 种以上逼单角度仍不付，且无合理解释<br>
+  <strong>原则：精力花在最有成交概率的客户身上。放弃不是失败，是资源优化。</strong></div>
+</div>
+
+<!-- ─── 2.2 Push申请 ─── -->
+<h3 id="s2-tactics">📱 二、Push 申请核心策略</h3>
+
+<ul class="technique-list">
+  <li><span class="li-num">1</span><strong>制造"抢房"氛围：</strong>"这间房只剩最后几间了，很多人在问。咱们是'抢'一下，还是'申请'一下？"——用"抢"不用"申请"。<span class="tag-new">实战技法</span></li>
+  <li><span class="li-num">2</span><strong>公寓截图施压：</strong>利用与公寓方的沟通截图（或找人配合演的截图），告诉学生："公寓老师刚催了，说再不定就要清掉名额了。"<span class="tag-new">实战技法</span></li>
+  <li><span class="li-num">3</span><strong>零风险占坑：</strong>"现在下单只是占个位置、锁住优惠，随时可以无责取消，没有任何费用和信用影响。"<strong>必须说清楚零风险，这是扫除下单心理障碍的关键。</strong></li>
+  <li><span class="li-num">4</span><strong>优惠/租期双重施压：</strong>"今天的返现活动是最后期限，先下单锁住优惠" + "这间房的起租时间非常适合你的开学时间，非常稀缺"<span class="tag-new">实战技法</span></li>
+</ul>
+
+<div class="script-block">
+  <div class="script-label">📝 Push 申请标准话术（可直接复制）</div>
+  <q>"下单无任何损失，后期若不需要该房源，可随时取消"</q>
+  <q>"当前下单可暂时锁定房源位置，避免后期心仪房源售罄"</q>
+  <q>"确认无误后再付款即可"</q>
+</div>
+
+<div class="highlight"><div><strong>关键认知：</strong>Push 下单不要求当场成交，而是：① 提升关注度 ② 提前收集信息（后续换房无需重收）③ "offer即将过期"是后续 push 付款的有力武器 ④ 下单房源作为后续对比辅助加快决策</div></div>
+
+<hr class="divider">
+
+<!-- ═══════════════════════ 阶段三 ═══════════════════════ -->
+<h2><span class="num">3</span>阶段三：订单 → 成单（付款 + 看房）</h2>
+<p style="font-size:14px;color:var(--text-muted);margin-bottom:12px;">核心逻辑：<strong>默认已提交申请的学生就是要定的</strong>。立刻引导付款，直到他明确表示不付款。</p>
+
+<!-- ─── 3.1 付款全流程时间轴 ─── -->
+<h3 id="s3-timeline">💰 一、付款全流程时间轴（一条龙逼单）</h3>
+
+<div class="step-flow">
+  <div class="step-item">
+    <div class="step-marker pay">0分</div>
+    <div class="step-body"><div class="step-title">申请成功 → 立刻恭喜 + 发邮件</div><div class="step-desc">"恭喜！申请已经成功了！我已经给你发了邮件，你查收一下。"<br>关键：不要给学生冷静的时间，立刻进入下一步。</div></div>
+  </div>
+  <div class="step-item">
+    <div class="step-marker pay">2分</div>
+    <div class="step-body"><div class="step-title">制造紧迫感 → 迫使他立刻登录</div><div class="step-desc">"邮件里的更改密码链接<strong>2小时内有效</strong>，你尽快点进去改一下密码。"（实际可能48小时，但说2小时能迫使他现在行动）<br>关键：他既然申了，现在必然有时间。趁热打铁。</div></div>
+  </div>
+  <div class="step-item">
+    <div class="step-marker pay">5分</div>
+    <div class="step-body"><div class="step-title">确认信息 → 让他回复"没问题"</div><div class="step-desc">"登录进去了吗？确认一下<strong>租期和租金</strong>有没有问题，没问题跟我说一声。"<br>关键：让他亲口确认"没问题"，后续付款时他无法反悔说信息有误。</div></div>
+  </div>
+  <div class="step-item">
+    <div class="step-marker pay">8分</div>
+    <div class="step-body"><div class="step-title">发付款步骤图 → 降低操作成本</div><div class="step-desc"><strong>提前准备好每一步的截图</strong>：点哪里、填什么、怎么确认，全部标注清楚。甚至将支付宝/微信二维码直接下载好发过去。<br>关键：操作步骤越少越好。学生每多一步操作就可能产生变数。</div></div>
+  </div>
+  <div class="step-item">
+    <div class="step-marker pay">10分</div>
+    <div class="step-body"><div class="step-title">封闭式提问 → 默认成交</div><div class="step-desc"><strong>不问"你付不付？"，问"你是用澳币还是人民币付？"</strong><br>不问"你能不能付？"，问"你现在方便用哪种方式？"<br>关键：默认他已经要付了，只差选方式。</div></div>
+  </div>
+</div>
+
+<div class="highlight"><div><strong>为什么操作成本越低越好？</strong>只要学生不付款，任何变数都可能发生——家长说不好、朋友推荐别的、刷到差评……<strong>中间多一分钟就多一分风险。</strong>付款链接直接发、二维码直接给，让他扫一下就能付。</div></div>
+
+<div class="blue-box"><div><strong>⚠️ 学生公寓 vs 社会公寓付款差异：</strong>以上一条龙流程主要针对<strong>学生公寓</strong>（改密码→登录→确认→付款）。<strong>社会公寓</strong>付款路径不同：可能是转账、扫码、飞汇（Western Union），没有统一的"改密码"步骤。社会公寓付款关键：① 确认好付款方式后直接发链接/二维码 ② 转账类付款做好汇款凭证跟进 ③ 社会公寓付款通常没有学生公寓那么紧迫的时间窗口，但<strong>同样遵循"越快越好"原则</strong>——学生拖得越久越容易变卦。</div></div>
+
+<!-- ─── 3.2 付款障碍应对 ─── -->
+<h3 id="s3-objection">🦊 二、付款障碍 & 连环逼单招</h3>
+
+<table class="info-table">
+  <thead><tr><th>学生说</th><th>真实原因</th><th>你的回应</th></tr></thead>
+  <tbody>
+    <tr><td>"我晚点付"</td><td>在犹豫，或在等其他平台回复</td><td>"你大概几点能搞定？我跟公寓老师申请帮你保留到那个时间"→ 过几分钟："搞定了，帮你多争取了2小时，赶紧付"</td></tr>
+    <tr><td>"我再考虑考虑"</td><td>有未说出口的顾虑</td><td>直接问："是价格不合适还是位置不满意？你说出来我帮你想办法"</td></tr>
+    <tr><td>"我爸妈再看看"</td><td>需要家长同意</td><td>"方便拉个群吗？我直接跟叔叔阿姨沟通，他们有什么问题我直接解答"</td></tr>
+    <tr><td>"不着急，还有时间"</td><td>没有紧迫感</td><td>"虽然OFFER写的是48小时，但公寓老师会手动清理僵尸申请，付得晚好楼层就没了"（甩锅给公寓）</td></tr>
+    <tr><td>"太贵了/手续费太高"</td><td>价格敏感</td><td>"建议到悉尼后办当地银行卡换绑，就没有手续费了。现在先付定金锁房，后边换卡省手续费"</td></tr>
+    <tr><td>完全沉默不回复</td><td>可能找了别的平台</td><td>"同学，这边还有三个同学在排队等这间房，你要是不要我就把订单取消了"→ 真取消，让他下次信你</td></tr>
+  </tbody>
+</table>
+
+<div class="wild-script">
+  <div class="script-label">🔥 连环逼单五招</div>
+  <q>第一招·预留失效倒计时："你10点能付是吧？我去跟公寓老师申请帮你保留到11点。" → 几分钟后："搞定了，帮你多争取了2小时，赶紧付。"</q>
+  <q>第二招·排队施压："同学，这边还有三个同学在排队等这间房，你要是不要我就把你的订单取消了。"</q>
+  <q>第三招·甩锅话术："虽然OFFER写的是48小时，但公寓老师会手动清理，付得晚好楼层就没了。"</q>
+  <q>第四招·感情牌（慎用）："同学，我当时为了帮你留住这个房子，都请同事喝了杯咖啡了，你现在不定了？"</q>
+  <q>第五招·Cancel验证：学生确实不付款 → 真的给他取消。让他验证你说的"房源紧俏"是真的。<strong>这次不成交，是为了下次更容易成交。</strong></q>
+</div>
+
+<h3>📋 三、付款前必做</h3>
+<div class="warn"><div><strong>付款 = 成单 + 客诉起点。</strong>付款前必须确认以下两项，从源头规避纠纷：</div></div>
+<ul class="technique-list">
+  <li><span class="li-num">1</span><strong>退订政策再次确认：</strong>付款前务必再次发送退订政策，客户确认无误后再引导付款</li>
+  <li><span class="li-num">2</span><strong>手续费提前说明：</strong>跨境/平台付款手续费 1%~4%，明确告知费用由银行/支付机构收取，非我司费用</li>
+</ul>
+<div class="script-block">
+  <div class="script-label">📝 付款提醒话术（可直接复制）</div>
+  <q>温馨提醒：因涉及跨境汇款，银行及支付平台会收取1%～4%不等的手续费（具体以银行费率为准），<strong>该费用由银行/支付机构收取，并非我司费用。</strong>（主要发生在信用卡、支付宝、微信等平台）</q>
+  <q>建议抵达悉尼后尽快办理当地银行卡，用本地卡前往前台换绑，可免除手续费，更安全也更划算。</q>
+</div>
+
+<!-- ─── 3.3 看房 ─── -->
+<h3 id="s3-viewing">🏃 四、邀约看房</h3>
+
+<div class="highlight"><div><strong>看房时机判断：</strong>看房不是只能在付款前——<strong>两种时机都可以</strong>。① 付款前看房：学生有顾虑、不确定房源实际情况时，先看房再付款，看完心理从"不确定"→"确定"。② 先下单付款再看房：适用于房源紧俏、学生对公寓品牌已信任的场景——先锁房再看，不满意再退。<strong>学生公寓优先走②（先下单再看），社会公寓两种都可以。</strong></div></div>
+
+<table class="info-table">
+  <thead><tr><th>供应商</th><th>看房难度</th><th>策略</th></tr></thead>
+  <tbody>
+    <tr><td>HY / cosyeasy / auhomes / unihome / Borderless</td><td><span class="tag-easy">低</span></td><td>正常预约即可</td></tr>
+    <tr><td>来客 / 万城 / ANC</td><td><span class="tag-hard">高/不可</span></td><td>提前二次确认，向学生预告。学生要求高 → 优先规避</td></tr>
+  </tbody>
+</table>
+<div class="tips-grid">
+  <div class="tip-card"><h4>🏢 学生公寓看房</h4><p>官网预约，群内留痕同步。<strong>务必先下单+递交申请再安排看房。</strong>理由："先下单收集信息、锁定房源，满意就定，不满意取消无损失"。<br><span style="color:var(--accent);font-weight:700;">看房后 90% 能定</span></p></div>
+  <div class="tip-card"><h4>🏘️ 社会公寓看房</h4><p>能约上就尽量安排。<strong>看房后心理从"不确定"→"确定"</strong>，带看供应商会主动打辅助。<br><span style="color:var(--accent);font-weight:700;">看房后 70% 确定</span></p></div>
+</div>
+
+<hr class="divider">
+
+<!-- ═══════════════════════ 阶段四 ═══════════════════════ -->
+<h2><span class="num">4</span>阶段四：客户后期服务</h2>
+
+<!-- ─── 4.1 校园大使转化 ─── -->
+<h3 id="s4-ambassador">🎓 一、订房成功后 —— 校园大使转化全流程</h3>
+<p style="font-size:14px;color:var(--text-muted);margin-bottom:12px;">订房成功后的黄金窗口期，必须做两件事：① 发入住指南规避客诉 ② 发展校园大使。转化核心不在于话术多牛，<strong>在于多次触达</strong>。</p>
+
+<h5>时机与动作</h5>
+<div class="step-flow">
+  <div class="step-item">
+    <div class="step-marker" style="background:#a47e1b;">当天</div>
+    <div class="step-body"><div class="step-title">订房成功 → 恭喜 + 发入住指南</div><div class="step-desc">"恭喜订房成功！入住指南发你了，有什么问题随时找我。"<br>目的：让对方感觉你服务到位，建立好感。这是后续提转介绍的前提。</div></div>
+  </div>
+  <div class="step-item">
+    <div class="step-marker" style="background:#a47e1b;">1天</div>
+    <div class="step-body"><div class="step-title">第一次提校园大使（自然植入）</div><div class="step-desc">"对了同学，我们有个校园大使计划，你注册一下就行，很简单。如果身边有同学需要租房，你推荐过来，他们订了房你也能拿到奖励。我把链接发你？"<br>要点：语气轻松，不要像推销。强调<strong>注册简单、无成本、有收益</strong>。</div></div>
+  </div>
+  <div class="step-item">
+    <div class="step-marker" style="background:#a47e1b;">1周</div>
+    <div class="step-body"><div class="step-title">第二次触达（如果还没注册）</div><div class="step-desc">"同学，校园大使那个你注册了吗？就填个手机号就行，1分钟搞定。你身边肯定有同学也要租房嘛~"<br>要点：降低行动门槛——"就填个手机号""1分钟"。</div></div>
+  </div>
+  <div class="step-item">
+    <div class="step-marker" style="background:#a47e1b;">入住后</div>
+    <div class="step-body"><div class="step-title">第三次触达 + 转介绍</div><div class="step-desc">"住得怎么样？还习惯吗？对了，你有新生群的话可以把我拉进去，或者把我名片推给需要的同学。你推荐过来的同学我会特别关照的~"<br>要点：关心对方近况 → 顺带提转介绍，不生硬。</div></div>
+  </div>
+</div>
+
+<h5>💡 校园大使转化核心技巧</h5>
+<ul class="technique-list">
+  <li><span class="li-num">1</span><strong>多次触达 > 完美话术：</strong>学生不推往往不是不愿意，而是<strong>忘了、不知道能赚钱、不知道怎么操作</strong>。多次提醒是转化的关键。</li>
+  <li><span class="li-num">2</span><strong>续租免服务费换转介绍：</strong>学生续租时："这次服务费我不收了，你帮我多推几个同学过来就行。"学生大概率会答应，且会把你的名片发新生群/家长群。</li>
+  <li><span class="li-num">3</span><strong>直接要求 > 委婉请求：</strong>对于关系好的学生，可以直接说："你得帮我推两个朋友过来。"他反而会觉得你们关系到位。</li>
+  <li><span class="li-num">4</span><strong>订房后立刻拉专属服务群：</strong>把学生、你自己、主管拉在一个群里——以后所有售后问题在群里解决，降低你的售后负担，同时让学生感到被重视。</li>
+  <li><span class="li-num">5</span><strong>利用学生的社交网络：</strong>一个学生把你的名片发到新生群/家长群，可能一夜之间加几十个人，且这些人的信任度极高（因为是熟人推荐）。</li>
+</ul>
+
+<div class="wild-script">
+  <div class="script-label">🦊 校园大使/转介绍话术模板</div>
+  <q>轻松版："对了，我们有个校园大使，你注册一下，身边有同学需要的话推过来就行，有奖励的～"</q>
+  <q>直接版："你得给我推两个朋友过来啊，我都帮你把房子搞定了！"</q>
+  <q>免服务费版："这次续租服务费不收了，你帮我多推几个同学就行，我一样好好服务他们"</q>
+  <q>群拉人版："你把你们新生群或者家长群发我一下，我进去帮大家解答租房问题"</q>
+</div>
+
+<!-- ─── 4.2 后期维护 ─── -->
+<h3 id="s4-post">🏨 二、客诉处理 + 入住维护</h3>
+<div class="tips-grid">
+  <div class="tip-card"><h4>🏢 学生公寓客诉</h4><p>引导学生<strong>直接对接公寓前台处理</strong>（效率最高）</p></div>
+  <div class="tip-card"><h4>🏘️ 社会公寓客诉</h4><p>引导学生在专属沟通群反馈，或<strong>邮件与房源方沟通</strong>，全程协助跟进</p></div>
+</div>
+<ul class="technique-list">
+  <li><span class="li-num">1</span><strong>入住跟进：</strong>确认顺利入住，有问题及时协调。好的房子主动回访，不好的房子（如红色公寓）视情况降低回访频率</li>
+  <li><span class="li-num">2</span><strong>关系维护：</strong>入住后保持联系，建立长期信任</li>
+  <li><span class="li-num">3</span><strong>挖掘复购/转介绍：</strong>满意客户 = 未来商机来源。见上方校园大使转化流程</li>
+</ul>
+
+<hr class="divider">
+
+<!-- ═══════ 实战技法速查表 ═══════ -->
+<h2 id="wild-ref"><span class="num">🔥</span>实战技法话术速查表</h2>
+<table class="info-table">
+  <thead><tr><th>场景</th><th>实战技法话术</th><th>适用时机</th></tr></thead>
+  <tbody>
+    <tr><td><strong>破冰·假混淆</strong></td><td>"你是刚才问XX房源的同学吗？"</td><td>非渠道客户（小红书/APP），假装搞混帖子来源，暗示咨询火爆</td></tr>
+    <tr><td><strong>破冰·多人排队</strong></td><td>"我们这有很多同学都在问/排队"</td><td>非渠道客户，制造紧迫</td></tr>
+    <tr><td><strong>破冰·故意说错</strong></td><td>"你是XX大学的吧？"（故意说错学校）</td><td>诱导学生主动提供真实信息</td></tr>
+    <tr><td><strong>推荐·留白</strong></td><td>只发"走路5分钟到学校"，不发全套资料</td><td>首轮推荐，等学生主动问</td></tr>
+    <tr><td><strong>Push申请·抢房</strong></td><td>"咱们是'抢'一下，还是'申请'一下？"</td><td>用词引导，避免"申请"</td></tr>
+    <tr><td><strong>Push申请·公寓施压</strong></td><td>"公寓老师刚催了，说再不定就要清掉名额了"</td><td>利用/伪造公寓沟通截图</td></tr>
+    <tr><td><strong>Push申请·零风险</strong></td><td>"随时可以无责取消，没有任何费用和信用影响"</td><td>消除下单心理负担</td></tr>
+    <tr><td><strong>Push付款·链接失效</strong></td><td>"邮件链接2小时内有效"（实际48小时）</td><td>迫使学生立刻登录操作</td></tr>
+    <tr><td><strong>Push付款·封闭提问</strong></td><td>"你是用澳币还是人民币付？"（不问"付不付"）</td><td>默认成交式引导</td></tr>
+    <tr><td><strong>Push付款·预留失效</strong></td><td>"帮你多争取了2小时，赶紧付"</td><td>制造倒计时紧迫感</td></tr>
+    <tr><td><strong>Push付款·排队施压</strong></td><td>"还有三个同学在排队等这间房，你要是不要我就取消了"</td><td>最终压迫（慎用）</td></tr>
+    <tr><td><strong>Push付款·甩锅</strong></td><td>"虽然写的是48小时，但公寓老师会手动清理，付得晚好楼层就没了"</td><td>解释OFFER时限压力</td></tr>
+    <tr><td><strong>Cancel验证</strong></td><td>学生不付款 → 真的取消订单。让他信"房源紧俏"是真的</td><td>这次不成交，为下次铺垫</td></tr>
+    <tr><td><strong>转介绍·免服务费</strong></td><td>"续租服务费不要了，你帮我多推几个同学"</td><td>以退为进，换新生群推荐</td></tr>
+    <tr><td><strong>转介绍·直接要</strong></td><td>"你得给我推两个朋友过来"</td><td>关系好的客户，直接要求</td></tr>
+  </tbody>
+</table>
+
+<hr class="divider">
+
+<!-- ═══════ 风控 ═══════ -->
+<h2 id="risk"><span class="num">🛡</span>内部管理与风控</h2>
+<div class="tips-grid">
+  <div class="tip-card"><h4>🎯 指挥棒效应</h4><p>月度主推某个高佣金或高需求的独家公寓，集中火力销售，提升整体效率。前半月卖一个，后半月卖另一个。</p></div>
+  <div class="tip-card"><h4>👶 新顾问培养</h4><p>新顾问最大问题不是话术，而是<strong>无法判断客户意向</strong>。SOP帮助新顾问识别：学生说了什么 = 意向到了哪个阶段。</p></div>
+  <div class="tip-card"><h4>📋 退订政策</h4><p>对于不确定的政策，<strong>必须只发官方原文</strong>，不进行个人解读。说多错多。</p></div>
+  <div class="tip-card"><h4>🗣️ 风险信息转述</h4><p>对于有风险的信息（如通勤时间），用"学生反馈"或"公寓老师告知"等方式转述，以规避责任。</p></div>
+</div>
+<div class="warn"><div>同行（如学旅居、明月居）存在大量夸大宣传、不实承诺、高额返现等激进手段。虽不推荐效仿，但需了解市场环境，以便在沟通时做好心理预期管理和差异化竞争。</div></div>
+
+<footer>异乡好居 · 全澳新团队 · 订单转化 SOP · 持续更新</footer>
+</div><!-- /tab-sop -->
+
+<!-- ═══════ TAB 2: 校园大使话术库 ═══════ -->
+<div class="tab-panel" id="tab-ambassador">
+<h1>校园大使 <span>话术库</span></h1>
+<p class="subtitle">异乡好居 · 全澳新团队 · 从群发到深度转化的标准化话术</p>
+
+<div class="green-box"><div><strong>核心原则：</strong>校园大使转化不在于话术多牛，在于<strong>多次触达 + 时机对 + 降低行动门槛</strong>。学生不推往往不是不愿意，而是忘了、不知道能赚钱、不知道怎么操作。以下话术按场景分类，可直接复制使用。</div></div>
+
+<!-- ─── 群发 ─── -->
+<h2><span class="num">📢</span>群发话术</h2>
+<div class="script-card">
+  <div class="sc-scenario"><span class="sc-badge mass">群发</span>适用于批量触达，语气轻松、信息量适中</div>
+  <div class="sc-text">宝子～给你安利一个校园现金福利活动💰要不要了解下呀✨
+
+我们现在招募校园大使啦👩‍🎓👨‍🎓
+
+只要你注册成为校园大使，推荐身边同学、朋友在平台成功预定，就可以获得500元现金奖励[红包]无套路超靠谱✅
+
+而且平台还会不定期发布校园大使专属有奖任务📋
+
+最高能拿数千元现金大奖🎁
+
+课余时间随手做，轻松赚零花钱太香啦😆
+
+XX学校很多同学都在做我们的校园大使~看咱们要不要一起加入呀？</div>
+</div>
+
+<!-- ─── 定房之前 ─── -->
+<h2><span class="num">1</span>定房之前 · 拼团+大使组合</h2>
+<div class="script-card">
+  <div class="sc-scenario"><span class="sc-badge pre-book">定房前</span>用拼团返现切入，顺带推校园大使，一石二鸟</div>
+  <div class="sc-text">诶对了同学，咱们的哪个拼团返现你有同学可以一起拼嘛？
+是这样的，刚好我们现在有一个校园大使的活动嘛，咱们可以邀请朋友一起来拼团~拼团的话咱们和朋友都可以拿到更多的返现，而且你还可以另外再得500人民币的校园大使奖金！
+如果朋友和咱们订的不是一样的房子也不影响咱们拿奖金嗷~之前就有悉大的同学就拿推荐奖金刚好换了个苹果三件套</div>
+</div>
+
+<!-- ─── 定房之后 ─── -->
+<h2><span class="num">2</span>定房之后 · 体验切入</h2>
+<div class="script-card">
+  <div class="sc-scenario"><span class="sc-badge post-book">定房后</span>从服务体验入手，自然过渡到校园大使邀请</div>
+  <div class="sc-text">流程全部都搞定啦！咱们就坐等入住就好了~
+家人定完房子，感觉整体的体验怎么样呀~
+
+嗯呐，因为找房确实也蛮心累的，很能理解。很多时候去找平台，找顾问对比也挺心累的。咱们觉得我服务OK的话，可以帮我认证一个校园大使嘛~
+
+这个校园大使就是咱们身边有朋友需要找房子了，可以帮忙推荐一下，一方面呢是我们直接帮朋友找房，让朋友能省心省事的把房子搞定，另一方面朋友定房的话你也能有500人民币的奖金。</div>
+</div>
+
+<!-- ─── 比较熟悉的 ─── -->
+<h2><span class="num">3</span>比较熟悉的客户 · 轻松+案例驱动</h2>
+<div class="script-card">
+  <div class="sc-scenario"><span class="sc-badge familiar">熟人</span>语气轻松，用真实案例制造"别人赚到了"的感觉</div>
+  <div class="sc-text">在不铁铁 来跟你唠两句！现在校园里租房需求特别旺，可别错过赚钱的机会啦。之前有个学姐就做得特别棒，陆陆续续推荐了三十多个人，一共赚了一万多，转头就买了个喜欢的包，成厉害了。
+咱们一单就是 500 块，其实多问问身边朋友、社团伙伴，收益很可观的。你只要帮忙牵个线，有人咨询直接推给我就好，全程不用你费心。趁着现在需求大，赶紧行动起来，赚点零花钱多好啊！</div>
+</div>
+
+<!-- ─── 长时间没联系 ─── -->
+<h2><span class="num">4</span>长时间没联系的 · 唤醒+案例</h2>
+<div class="script-card">
+  <div class="sc-scenario"><span class="sc-badge reconnect">唤醒</span>先关心近况，再用案例和数据唤醒，降低对方的行动心理负担</div>
+  <div class="sc-text">好久没联系啦，最近一切都顺利吧？知道大家平时课业繁重，可能没过多精力做推荐。不过还是想跟你提提，目前租房的同学特别多，机会真的不少。
+之前咱们一位学姐，靠着推荐同学租房，累计推了三十多人，总共拿到一万多元奖励，还特意用这笔收入买了包包。咱们的奖励一直有效，推荐一人就有 500 元，无门槛、操作也简单。你不用特意花很多时间，日常聊天的时候顺带问一句就行，后续所有对接工作我来搞定。希望你也多多行动，抓住机会增加收入，有任何问题随时找我哈！</div>
+</div>
+
+<div class="script-card">
+  <div class="sc-scenario"><span class="sc-badge reconnect">唤醒·短版</span>适合快节奏触达，信息密度低但钩子清晰</div>
+  <div class="sc-text">哈喽，xxx同学～👋
+最近住得怎么样呀？新学期有换房打算嘛？
+
+顺便跟你分享一个小福利🎁
+我们目前正在招募【校园大使】！
+
+如果你身边有正在找房的同学、学弟学妹，推荐他们来找我咨询和订房，每成功预订一位，你都可以获得 💰最高500元人民币推荐奖励！
+
+✅ 推荐成功符合要求即可拿奖金
+✅ 多推多得，上不封顶
+✅ 帮朋友找到靠谱房源，避免踩坑
+✅ 还能顺便赚点零花钱
+
+如果感兴趣想了解具体规则，或者想加入校园大使计划，随时滴滴我～我给你详细介绍😄</div>
+</div>
+
+<!-- ─── 已定房 vs 未定房 ─── -->
+<h2><span class="num">5</span>已定房 / 未定房 · 差异化话术</h2>
+<div class="script-card">
+  <div class="sc-scenario"><span class="sc-badge post-book">已定房</span>对方已信任你，强调"轻松操作+我帮你搞定素材"</div>
+  <div class="sc-text">宝子下午好✨ 有一个租房推荐的小福利呀！操作超简单，你身边要是有打算租房的同学，直接把人介绍给我就OK啦。我这边也会备好房源资料和宣传素材帮你省心，交给我你就放心吧！
+
+每成功促成一单，最高能拿到500元红包哦～另外如果身边朋友想做校园大使，也欢迎来找我呀！课余时间赚点零花钱超香的，咱们试试？😆</div>
+</div>
+
+<div class="script-card">
+  <div class="sc-scenario"><span class="sc-badge pre-book">未定房</span>对方还在观望，强调"不用费心+相当于省房租"</div>
+  <div class="sc-text">宝子下午好呀🥳 有一个租房推荐的活动给咱们说一下！流程特别轻松，碰到有租房需求的小伙伴，直接推给我就行咯。素材和房源信息我都会准备妥当，不用你费心。
+
+只要推荐成功一单，最高就能领500元红包，妥妥的额外收入！对啦，要是朋友也想加入做校代，同样可以来找我~ 有空想试试就冲，相当于给咱们省房租了！你觉得呢？</div>
+</div>
+
+<!-- ─── 入住后回访 ─── -->
+<h2><span class="num">6</span>入住后回访 · 关怀+转化二合一</h2>
+<div class="script-card">
+  <div class="sc-scenario"><span class="sc-badge checkin">入住后</span>关心邮件/入住状况为切入点，顺带推校园大使，不生硬</div>
+  <div class="sc-text">哈喽同学，打扰啦！咱们现在在公寓住的怎么样嘞？公寓那边最近有给你发过什么邮件吗？下半年过去的人比较多，我怕你漏掉公寓的重要消息，所以特意来帮你排查一下。如果有收到拿不准的邮件，随时截图发我瞅瞅哈！
+
+正好顺便给你塞个小福利：我们目前正在招募校园大使！只要你推荐身边的同学或学弟学妹来找我订房，每成功预定一人，你就能获得 500 元人民币的推荐奖金！身边资源多的话，多拉多得，不设上限哦！既能帮朋友避坑找到好房子，自己还能躺赚零花钱。如果有兴趣想了解具体怎么操作，随时扣我呀，我带你！上车不亏~😎</div>
+</div>
+
+<footer>异乡好居 · 全澳新团队 · 校园大使话术库 · 持续更新</footer>
+</div><!-- /tab-ambassador -->
+
+</main>
+<script>
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`.tab-btn[onclick*="${tab}"]`).classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>
