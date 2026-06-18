@@ -576,7 +576,8 @@ function switchTab(t){document.querySelectorAll('.tab-switcher button').forEach(
 function toggleSection(h){h.parentElement.classList.toggle('open')}
 
 // ═══ JUMP FROM MIND MAP ═══
-function jumpTo(id){const s=document.getElementById(id);if(s&&!s.classList.contains('open'))s.classList.add('open');s.scrollIntoView({behavior:'smooth',block:'start'})}
+function jumpTo(id){const s=document.getElementById(id);if(s&&!s.classList.contains('open'))s.classList.add('open');s.scrollIntoView({behavior:'smooth',block:'start'});navHighlight(id)}
+function navHighlight(id){links.forEach(a=>a.classList.remove('nav-active'));const l=document.querySelector(`nav a[href="#${id}"]`);if(l){l.classList.add('nav-active');l.scrollIntoView({behavior:'smooth',block:'nearest'})}}
 
 // ═══ PROGRESS BAR ═══
 window.addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('progressBar').style.setProperty('--p',Math.round(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%')})
