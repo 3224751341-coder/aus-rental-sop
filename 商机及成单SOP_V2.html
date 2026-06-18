@@ -576,7 +576,8 @@ function switchTab(t){document.querySelectorAll('.tab-switcher button').forEach(
 function toggleSection(h){h.parentElement.classList.toggle('open')}
 
 // ═══ JUMP FROM MIND MAP ═══
-function jumpTo(id){const s=document.getElementById(id);if(s&&!s.classList.contains('open'))s.classList.add('open');s.scrollIntoView({behavior:'smooth',block:'start'});navHighlight(id)}
+let navLock=null;
+function jumpTo(id){navLock=id;const s=document.getElementById(id);if(s&&!s.classList.contains('open'))s.classList.add('open');s.scrollIntoView({behavior:'smooth',block:'start'});navHighlight(id)}
 function navHighlight(id){links.forEach(a=>a.classList.remove('nav-active'));const l=document.querySelector(`nav a[href="#${id}"]`);if(l){l.classList.add('nav-active');l.scrollIntoView({behavior:'smooth',block:'nearest'})}}
 
 // ═══ GLOBAL: all right-side clicks on #anchors also sync nav ═══
@@ -589,18 +590,25 @@ document.addEventListener('click',e=>{
   const sec=document.getElementById(id);
   if(sec&&sec.classList.contains('c-section')){
     if(!sec.classList.contains('open'))sec.classList.add('open');
-    setTimeout(()=>navHighlight(id),100);
+    navLock=id;
+    setTimeout(()=>{navHighlight(id)},150);
   }
 });
 
-// ═══ PROGRESS BAR ═══
-window.addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('progressBar').style.setProperty('--p',Math.round(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%')})
-
-// ═══ SCROLL SPY ═══
+// ═══ SCROLL SPY (does not override manual nav) ═══
 const links=document.querySelectorAll('nav a[href^="#"]');
 const secs=[...links].map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
-const obs=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){links.forEach(a=>a.classList.remove('nav-active'));const l=document.querySelector(`nav a[href="#${en.target.id}"]`);if(l)l.classList.add('nav-active')}})},{rootMargin:'-15% 0px -70% 0px'});
+const obs=new IntersectionObserver(e=>{
+  if(navLock){return} // don't override manual clicks
+  e.forEach(en=>{if(en.isIntersecting){links.forEach(a=>a.classList.remove('nav-active'));const l=document.querySelector(`nav a[href="#${en.target.id}"]`);if(l)l.classList.add('nav-active')}})
+},{rootMargin:'-15% 0px -70% 0px'});
 secs.forEach(s=>obs.observe(s));
+// release lock after scroll settles
+let lockTimer;
+window.addEventListener('scroll',()=>{clearTimeout(lockTimer);lockTimer=setTimeout(()=>{navLock=null},600)});
+
+// ═══ PROGRESS BAR ═══
+window.addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('progressBar').style.setProperty('--p',Math.round(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%')})
 
 // ═══ SEARCH ═══
 const data=[];
