@@ -579,6 +579,20 @@ function toggleSection(h){h.parentElement.classList.toggle('open')}
 function jumpTo(id){const s=document.getElementById(id);if(s&&!s.classList.contains('open'))s.classList.add('open');s.scrollIntoView({behavior:'smooth',block:'start'});navHighlight(id)}
 function navHighlight(id){links.forEach(a=>a.classList.remove('nav-active'));const l=document.querySelector(`nav a[href="#${id}"]`);if(l){l.classList.add('nav-active');l.scrollIntoView({behavior:'smooth',block:'nearest'})}}
 
+// ═══ GLOBAL: all right-side clicks on #anchors also sync nav ═══
+document.addEventListener('click',e=>{
+  const a=e.target.closest('a[href^="#"]');
+  if(!a)return;
+  const href=a.getAttribute('href');
+  if(href==='#')return;
+  const id=href.slice(1);
+  const sec=document.getElementById(id);
+  if(sec&&sec.classList.contains('c-section')){
+    if(!sec.classList.contains('open'))sec.classList.add('open');
+    setTimeout(()=>navHighlight(id),100);
+  }
+});
+
 // ═══ PROGRESS BAR ═══
 window.addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('progressBar').style.setProperty('--p',Math.round(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%')})
 
